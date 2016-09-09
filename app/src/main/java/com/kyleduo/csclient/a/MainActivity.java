@@ -50,11 +50,10 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
 	}
 
 	private void iniTab() {
-		actionBar = getSupportActionBar();
+		actionBar = getSupportActionBar();					// 删掉这个竟然会崩溃
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -80,12 +79,12 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 			mReceiver = new InnerMessageReceiver();
 		}
 		IntentFilter filter = new IntentFilter();
-		filter.addAction(CSConstant.ACTION_MESSAGE_ARRIVED);
-		filter.setPriority(100);
+		filter.addAction(CSConstant.ACTION_MESSAGE_ARRIVED);		// 信息到达接收器
+		filter.setPriority(100);									// 优先级最高
 		registerReceiver(mReceiver, filter);
 
 		if (!mTabInitialed) {
-			iniTab();
+			iniTab();			// 设置两个标签页
 			mTabInitialed = true;
 		}
 
@@ -138,7 +137,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 				ICometService.stopService();
 				Intent service = new Intent(MainActivity.this, ICometService.class);
 //				service.setFlags(Intent.)
-				MainActivity.this.stopService(service);
+				MainActivity.this.stopService(service);			// 外界主动停止服务
 				System.exit(0);
 //				Intent intent = new Intent(MainActivity.this, LoginActivity.class);
 //				MainActivity.this.startActivity(intent);
@@ -194,6 +193,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 		}
 	}
 
+	// 广播接收器：信息到达后的处理工作
 	private class InnerMessageReceiver extends BroadcastReceiver {
 
 		@Override
@@ -201,7 +201,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 			UIUtils.showToast(context, "message arrived");
 
 			Content content = (Content) intent.getSerializableExtra("content");
-			MessageObj message = new MessageObj(content);
+			MessageObj message = new MessageObj(content);		// 结构化存储消息的地方
 
 			boolean ok = false;
 
@@ -213,7 +213,5 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 				abortBroadcast();
 			}
 		}
-
 	}
-
 }

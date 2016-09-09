@@ -44,11 +44,13 @@ public class LoginActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_login);
 
+		// 下面也就是说，如果已经存在有效cookie，则直接从login界面跳到主界面
+		// 取得这个应用程序的Context，类似的Activity.this取得这个Activity的Context
 		String cookie = SPUtils.getString(getApplicationContext(), "cookie");
 		if (!TextUtils.isEmpty(cookie)) {
 			String decoded = null;
 			try {
-				decoded = URLDecoder.decode(URLDecoder.decode(cookie, "utf-8"), "utf-8");
+				decoded = URLDecoder.decode(URLDecoder.decode(cookie, "utf-8"), "utf-8");		// ？？？
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
@@ -86,9 +88,9 @@ public class LoginActivity extends Activity {
 	}
 
 	private void startICometService(String uname) {
-		Intent service = new Intent(getApplicationContext(), ICometService.class);
+		Intent service = new Intent(getApplicationContext(), ICometService.class);		// 这里用了两个参数，等同于setClass，不过第一个参数有点不同
 		service.putExtra("uname", uname);
-		getApplication().startService(service);
+		getApplication().startService(service);		// 为什么不用intent？
 	}
 
 	private void turnToMainActivity() {
@@ -99,12 +101,14 @@ public class LoginActivity extends Activity {
 	}
 
 	protected void doLogin(final String uname) {
-		mProgressDialog = UIUtils.showProgressDialog(LoginActivity.this, "");
+		mProgressDialog = UIUtils.showProgressDialog(LoginActivity.this, "");		// 显示登陆等待dialog
 		AsyncHttpClient client = new AsyncHttpClient();
 		client.setEnableRedirects(false);
 		RequestParams params = new RequestParams();
 		params.put("uname", uname);
 		client.post(LoginActivity.this, CSConstant.BASE_URL + "/login.php", params, new AsyncHttpResponseHandler() {
+
+			// 保存cookies
 			@Override
 			public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
 				super.onSuccess(arg0, arg1, arg2);

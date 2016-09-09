@@ -30,7 +30,6 @@ public class ChatActivity extends ActionBarActivity {
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction().add(R.id.container, mFragment).commit();
 		}
-
 	}
 
 	@Override
